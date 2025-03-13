@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>spring boot practice</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <a href="/" class="logo">홈버튼</a>
+        <div class="nav-user" sec:authorize="isAuthenticated()">
+            <span style="color: white;">안녕하세요, <span sec:authentication="name"></span>님!</span>
+        </div>
+        <div class="nav-links">
+            <a th:href="@{/login}" class="btn" sec:authorize="isAnonymous()">로그인</a>
+            <a th:href="@{/logout}" class="btn" sec:authorize="isAuthenticated()">로그아웃</a>
+        </div>
+        <div class="nav-links">
+            <a th:href="@{/signup}" class="btn">회원가입</a>
+        </div>
+    </div>
+</nav>
+
+
+<main>
+    <th:block th:replace="~{${view} :: content}" />
+</main>
+
+</body>
+</html>

@@ -1,0 +1,1 @@
+UPDATE test_db.users SET role = 'ADMIN' WHERE name = 'admin';

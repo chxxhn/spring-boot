@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Home</title>
+</head>
+<body>
+
+<th:block th:fragment="content">
+  <h2>메인 페이지</h2>
+
+  <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+    <a th:href="@{/admin}" class="btn">회원 조회하기</a>
+  </div>
+
+</th:block>
+
+</body>
+</html>
