@@ -18,6 +18,6 @@ spring:
     mode: HTML
     cache: false
 
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
+#  flyway:
+#    enabled: true
+#    baseline-on-migrate: true

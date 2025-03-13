@@ -10,12 +10,12 @@
 <nav class="navbar">
     <div class="nav-container">
         <a href="/" class="logo">홈버튼</a>
-        <div class="nav-user" sec:authorize="isAuthenticated()">
-            <span style="color: white;">안녕하세요, <span sec:authentication="name"></span>님!</span>
+        <div class="nav-user" th:if="${session.user}">
+            <span style="color: white;">안녕하세요, <span th:text="${session.user.name}"></span>님!</span>
         </div>
         <div class="nav-links">
-            <a th:href="@{/login}" class="btn" sec:authorize="isAnonymous()">로그인</a>
-            <a th:href="@{/logout}" class="btn" sec:authorize="isAuthenticated()">로그아웃</a>
+            <a th:href="@{/login}" class="btn" th:if="${session.user == null}">로그인</a>
+            <a th:href="@{/logout}" class="btn" th:if="${session.user != null}">로그아웃</a>
         </div>
         <div class="nav-links">
             <a th:href="@{/signup}" class="btn">회원가입</a>

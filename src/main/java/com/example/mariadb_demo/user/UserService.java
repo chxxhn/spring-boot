@@ -23,6 +23,15 @@ public class UserService {
         return user;
     }
 
+    public User authenticate(String username, String password) {
+        User user = userRepository.findByname(username).orElse(null);
+
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
+            return null;
+        }
+        return user;
+    }
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
