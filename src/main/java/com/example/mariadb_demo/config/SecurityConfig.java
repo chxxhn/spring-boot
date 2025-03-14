@@ -23,12 +23,18 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority(UserRole.ADMIN.getValue())
                         .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
                 )
-                .formLogin(formLogin -> formLogin.loginPage("/login").defaultSuccessUrl("/"))
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/")
+                        .usernameParameter("email")
+                        .permitAll()
+                )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
-                );
+                )
+        ;
 
         return http.build();
     }
