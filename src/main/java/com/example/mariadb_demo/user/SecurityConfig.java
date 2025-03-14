@@ -1,6 +1,5 @@
-package com.example.mariadb_demo.config;
+package com.example.mariadb_demo.user;
 
-import com.example.mariadb_demo.user.UserRole;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
