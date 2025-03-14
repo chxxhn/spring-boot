@@ -17,7 +17,7 @@ spring:
     suffix: .html
     mode: HTML
     cache: false
-    
+
 server:
   servlet:
     session:

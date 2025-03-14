@@ -12,11 +12,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public User create(String username, String email, String password, boolean isAdmin) {
+    public User create(String username, String email, String password, String phone, boolean isAdmin) {
         User user = new User();
         user.setName(username);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
+        user.setPhone(phone);
         user.setRole(isAdmin ? UserRole.ADMIN : UserRole.USER);
         this.userRepository.save(user);
         return user;

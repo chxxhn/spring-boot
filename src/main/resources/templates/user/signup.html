@@ -21,6 +21,10 @@
         <input type="email" id="email" th:field="*{email}" required><br>
         <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: red;"></div>
 
+        <label for="email">전번:</label>
+        <input type="text" id="phone" th:field="*{phone}" required><br>
+        <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="color: red;"></div>
+
         <label for="password1">비밀번호:</label>
         <input type="password" id="password1" th:field="*{password1}" required><br>
         <div th:if="${#fields.hasErrors('password1')}" th:errors="*{password1}" style="color: red;"></div>

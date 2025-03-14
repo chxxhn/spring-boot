@@ -36,7 +36,7 @@ public class UserController {
 
         try {
             userService.create(userDTO.getUsername(),
-                    userDTO.getEmail(), userDTO.getPassword1(), isAdmin);
+                    userDTO.getEmail(), userDTO.getPassword1(), userDTO.getPhone(), isAdmin);
         } catch(DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("signupFailed", "이미 등록된 이메일입니다.");
@@ -51,7 +51,10 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public String showLoginPage(Model model) {
+    public String login(@RequestParam(value = "error", required = false) String error, Model model) {
+        if (error != null) {
+            model.addAttribute("loginError", "이메일 또는 비밀번호가 올바르지 않습니다.");
+        }
         model.addAttribute("userDTO", new UserDTO());
         return "user/login";
     }
