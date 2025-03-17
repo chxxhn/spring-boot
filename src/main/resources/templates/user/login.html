@@ -10,9 +10,8 @@
   <h2>로그인</h2>
 
   <form th:action="@{/login}" method="post">
-    <div th:if="${loginError}" class="error-message">
-      <p th:text="${loginError}"></p>
-    </div>
+    <div th:if="${loginError}" class="error-message">Wrong Username or Password</div>
+    <div th:if="${loginLocked}" class="error-message">>Account locked due to multiple incorrect login attempts</div>
     <label for="username">Id:</label>
     <input type="text" id="username" name="username" required><br>
 

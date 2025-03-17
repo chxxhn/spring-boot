@@ -21,7 +21,7 @@ import javax.sql.DataSource;
 public class SecurityConfig {
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http, CustomAuthenticationFailureHandler customAuthenticationFailureHandler) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority(UserRole.ADMIN.getValue())
@@ -32,6 +32,7 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/")
                         .usernameParameter("username")
                         .permitAll()
+                        .failureHandler(customAuthenticationFailureHandler)
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
