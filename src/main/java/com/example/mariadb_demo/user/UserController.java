@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signup(@Valid UserDTO userDTO, BindingResult bindingResult, @RequestParam(defaultValue = "false") boolean isAdmin) {
+    public String signup(@Valid UserDTO userDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "user/signup";
         }
@@ -35,27 +35,29 @@ public class UserController {
         }
 
         try {
-            userService.create(userDTO.getUsername(),
-                    userDTO.getEmail(), userDTO.getPassword1(), userDTO.getPhone(), isAdmin);
-        } catch(DataIntegrityViolationException e) {
-            e.printStackTrace();
-            bindingResult.reject("signupFailed", "이미 등록된 이메일입니다.");
+            userService.createUser(userDTO);
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().contains("이메일")) {
+                bindingResult.rejectValue("email", "duplicateEmail", e.getMessage());
+            } else if (e.getMessage().contains("전화번호")) {
+                bindingResult.rejectValue("phone", "duplicatePhone", e.getMessage());
+            } else {
+                bindingResult.reject("signupFailed", e.getMessage());
+            }
             return "user/signup";
-        }catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            bindingResult.reject("signupFailed", e.getMessage());
+            bindingResult.reject("signupFailed", "회원가입 중 오류가 발생했습니다.");
             return "user/signup";
         }
-
         return "user/login";
     }
 
     @GetMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
-            model.addAttribute("loginError", "이메일 또는 비밀번호가 올바르지 않습니다.");
+            model.addAttribute("loginError", "아이디 또는 비밀번호가 올바르지 않습니다.");
         }
-        model.addAttribute("userDTO", new UserDTO());
         return "user/login";
     }
 

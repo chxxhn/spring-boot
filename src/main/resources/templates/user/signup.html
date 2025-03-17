@@ -21,7 +21,7 @@
         <input type="email" id="email" th:field="*{email}" required><br>
         <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: red;"></div>
 
-        <label for="email">전번:</label>
+        <label for="phone">전번:</label>
         <input type="text" id="phone" th:field="*{phone}" required><br>
         <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="color: red;"></div>
 

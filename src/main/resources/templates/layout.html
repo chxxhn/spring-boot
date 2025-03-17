@@ -11,7 +11,7 @@
     <div class="nav-container">
         <a href="/" class="logo">홈버튼</a>
         <div class="nav-user" th:if="${user}">
-            <span style="color: white;">안녕하세요, <span th:text="${user.name}"></span>님!</span>
+            <span style="color: white;">안녕하세요, <span th:text="${user.username}"></span>님!</span>
         </div>
         <div class="nav-links">
             <a th:href="@{/login}" class="btn" th:if="${user == null}">로그인</a>

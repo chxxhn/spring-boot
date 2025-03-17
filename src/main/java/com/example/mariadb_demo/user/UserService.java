@@ -12,18 +12,24 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public User create(String username, String email, String password, String phone, boolean isAdmin) {
-        User user = new User();
-        user.setName(username);
-        user.setEmail(email);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setPhone(phone);
-        user.setRole(isAdmin ? UserRole.ADMIN : UserRole.USER);
+    public ApplicationUser createUser(UserDTO userDTO) {
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
+            throw new IllegalArgumentException("이미 등록된 이메일입니다.");
+        }
+        if (userRepository.existsByPhone(userDTO.getPhone())) {
+            throw new IllegalArgumentException("이미 등록된 전화번호입니다.");
+        }
+        ApplicationUser user = new ApplicationUser();
+        user.setUsername(userDTO.getUsername());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword1()));
+        user.setPhone(userDTO.getPhone());
+        user.setRole(UserRole.USER);
         this.userRepository.save(user);
         return user;
     }
 
-    public List<User> getAllUsers() {
+    public List<ApplicationUser> getAllUsers() {
         return userRepository.findAll();
     }
 
