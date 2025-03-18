@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         if(loginAttemptService.isBlocked(username)) {
-            throw new LockedException("User Account is blocked");
+            throw new LockedException("User Account is locked");
         }
         ApplicationUser user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));

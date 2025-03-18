@@ -45,6 +45,7 @@ public class LoginAttemptService {
 
     public boolean isBlocked(String username) {
         try {
+            int attempts = loginAttemptCache.get(username);
             return loginAttemptCache.get(username) >= MAX_ATTEMPTS_COUNT;
         }
         catch (ExecutionException e) {

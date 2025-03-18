@@ -27,13 +27,13 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
     public void onAuthenticationFailure(HttpServletRequest request,
                                         HttpServletResponse response,
                                         AuthenticationException exception)
-            throws IOException, ServletException {
+            throws IOException  {
         String username = request.getParameter("username");
         if (username != null) {
             loginAttemptService.loginFailed(username);
         }
-
-        if (exception instanceof LockedException) {
+        System.out.println("Authentication failed for " + username + ": " + exception.getClass().getSimpleName());
+        if (exception.getCause() instanceof LockedException) {
             response.sendRedirect("/login-locked");
         } else {
             response.sendRedirect("/login-error");
