@@ -8,7 +8,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
 
   thymeleaf:
@@ -17,6 +17,22 @@ spring:
     suffix: .html
     mode: HTML
     cache: false
+
+  mail:
+    host: smtp.gmail.com
+    username: chaehyun08032@gmail.com
+    password: eoxocainowqttrno
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: true
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 server:
   servlet:
@@ -27,3 +43,4 @@ server:
 #  flyway:
 #    enabled: true
 #    baseline-on-migrate: true
+
