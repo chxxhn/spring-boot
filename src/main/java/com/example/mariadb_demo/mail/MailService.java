@@ -9,6 +9,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
@@ -68,4 +69,14 @@ public class MailService {
         mailSend(serviceName, customerMail, title, content);
         return Integer.toString(authNumber);
     }
+
+    public Boolean checkAuthNum(String email, String authNum) {
+        ValueOperations<String, String> valOperations = redisConfig.redisTemplate().opsForValue();
+        String code = valOperations.get(email);
+        if (Objects.equals(code, authNum)) {
+            return true;
+        } else return false;
+    }
+
+
 }

@@ -18,11 +18,9 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-    private final MailService mailService;
 
-    public UserController(UserService userService, MailService mailService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.mailService = mailService;
     }
 
     @GetMapping("/signup")
@@ -77,16 +75,6 @@ public class UserController {
     public String loginError(Model model) {
         model.addAttribute("loginError", true);
         return "user/login";
-    }
-
-    @PostMapping("/signup/email")
-    public Map<String, String> mailSend(@RequestBody @Valid MailRequestDTO mailRequestDto) {
-        System.out.println("mailRequestDto.getEmail() = " + mailRequestDto.getEmail());
-        String code = mailService.joinEmail(mailRequestDto.getEmail());
-        Map<String, String> response = new HashMap<>();
-        response.put("code", code);
-
-        return response;
     }
 
     @GetMapping("/admin")
