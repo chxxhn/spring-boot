@@ -10,18 +10,13 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final LoginAttemptService loginAttemptService;
 
-    public CustomUserDetailsService(UserRepository userRepository, LoginAttemptService loginAttemptService) {
+    public CustomUserDetailsService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.loginAttemptService = loginAttemptService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if(loginAttemptService.isBlocked(username)) {
-            throw new LockedException("User Account is locked");
-        }
         ApplicationUser user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
 

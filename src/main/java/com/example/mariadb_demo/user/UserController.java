@@ -44,7 +44,11 @@ public class UserController {
         try {
             userService.createUser(userDTO);
         } catch (IllegalArgumentException e) {
-            if (e.getMessage().contains("이메일")) {
+            if (e.getMessage().contains("이메일 인증이 완료되지 않았습니다.")) {
+                bindingResult.rejectValue("email", "emailNotVerified", e.getMessage());
+            } else if (e.getMessage().contains("전화번호 인증이 완료되지 않았습니다.")) {
+                bindingResult.rejectValue("phone", "phoneNotVerified", e.getMessage());
+            } else if (e.getMessage().contains("이메일")) {
                 bindingResult.rejectValue("email", "duplicateEmail", e.getMessage());
             } else if (e.getMessage().contains("전화번호")) {
                 bindingResult.rejectValue("phone", "duplicatePhone", e.getMessage());
@@ -62,12 +66,6 @@ public class UserController {
 
     @GetMapping("/login")
     public String login() {
-        return "user/login";
-    }
-
-    @GetMapping("/login-locked")
-    public String loginLocked(Model model) {
-        model.addAttribute("loginLocked", true);
         return "user/login";
     }
 

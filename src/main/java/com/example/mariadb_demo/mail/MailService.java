@@ -74,9 +74,15 @@ public class MailService {
         ValueOperations<String, String> valOperations = redisConfig.redisTemplate().opsForValue();
         String code = valOperations.get(email);
         if (Objects.equals(code, authNum)) {
+            valOperations.set("email:verified:" + email, "true", 10, TimeUnit.MINUTES);
             return true;
-        } else return false;
+        } else
+            return false;
     }
 
+    public boolean isEmailVerified(String email) {
+        ValueOperations<String, String> valOperations = redisConfig.redisTemplate().opsForValue();
+        return "true".equals(valOperations.get("email:verified:" + email));
+    }
 
 }

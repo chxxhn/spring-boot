@@ -17,12 +17,7 @@ import java.io.IOException;
 @Service
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-    private final LoginAttemptService loginAttemptService;
     private DefaultRedirectStrategy defaultRedirectStrategy = new DefaultRedirectStrategy();
-
-    public CustomAuthenticationFailureHandler(LoginAttemptService loginAttemptService) {
-        this.loginAttemptService = loginAttemptService;
-    }
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
@@ -30,15 +25,8 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
                                         AuthenticationException exception)
             throws IOException, ServletException {
         String username = request.getParameter("username");
-        if (username != null) {
-            loginAttemptService.loginFailed(username);
-        }
         if(exception instanceof DisabledException) {
             defaultRedirectStrategy.sendRedirect(request, response, "/login-disabled");
-            return;
-        }
-        if(exception.getCause() instanceof LockedException) {
-            defaultRedirectStrategy.sendRedirect(request, response, "/login-locked");
             return;
         }
         else {

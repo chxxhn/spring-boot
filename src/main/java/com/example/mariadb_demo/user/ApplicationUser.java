@@ -29,10 +29,4 @@ public class ApplicationUser {
 
     private boolean enabled = true;
 
-    private boolean locked = false;
-
-    private boolean verified = false;
-
-    @Column(name = "account_credentials_expired")
-    private boolean accountCredentialsExpired = false;
 }
