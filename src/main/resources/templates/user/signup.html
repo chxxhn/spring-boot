@@ -22,15 +22,23 @@
             <br>
             <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: red;"></div>
 
-            <div id="verification-section" style="display: none; margin-top: 10px;">
-                <label for="authNum">인증번호 입력:</label>
-                <input type="text" id="authNum" placeholder="인증번호 입력">
-                <button type="button" id="auth-button">인증</button>
+            <div id="emailAuth-section">
+                <label for="emailAuth">이메일 인증번호 입력</label>
+                <input type="text" id="emailAuth" placeholder="인증번호 입력">
+                <button type="button" id="emailAuth-button">인증</button>
             </div>
 
             <label for="phone">전번:</label>
-            <input type="text" id="phone" th:field="*{phone}" required><br>
+            <input type="tel" id="phone" th:field="*{phone}" required>
+            <button type="button" id="phone-button" onclick="sendSMS()">인증번호 전송</button>
+            <br>
             <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="color: red;"></div>
+
+            <div id="phoneAuth-section">
+                <label for="phoneAuth">전화번호 인증번호 입력</label>
+                <input type="text" id="phoneAuth" placeholder="인증번호 입력">
+                <button type="button" id="phoneAuth-button" onclick="verifySMS()">인증</button>
+            </div>
 
             <label for="password1">비밀번호:</label>
             <input type="password" id="password1" th:field="*{password1}" required><br>
@@ -60,7 +68,6 @@
                         success: function (code) {
                             if (code) {
                                 alert("입력하신 메일로 인증번호가 전송되었습니다.");
-                                $("#verification-section").show();
                             } else {
                                 alert("인증번호를 받을 수 없습니다.");
                             }
@@ -70,9 +77,9 @@
                         }
                     });
                 });
-                $("#auth-button").click(function () {
+                $("#emailAuth-button").click(function () {
                     var email = $("#email").val();
-                    var authNum = $("#authNum").val();
+                    var authNum = $("#emailAuth").val();
                     var emailCheckDto = {
                         email: email,
                         authNum: authNum
@@ -99,6 +106,68 @@
                     });
                 });
             });
+        </script>
+        <script>
+            async function sendSMS() {
+                const phone = document.getElementById("phone").value;
+
+                const data = {
+                    phone: phone
+                };
+
+                fetch("http://localhost:8080/signup/sms", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + response.statusText)
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        alert('인증번호를 보냈습니다!');
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('오류입니다!');
+                    });
+            }
+            async function verifySMS() {
+                const phone = document.getElementById('phone').value;
+                const certificationNumber = document.getElementById('phoneAuth').value;
+
+                const data = {
+                    phone: phone,
+                    certificationNumber: certificationNumber
+                };
+
+                fetch ('http://localhost:8080/signup/smsAuth', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok ' + 											response.statusText);
+                        } return response.json();
+                    })
+                    .then(data => {
+                        alert('인증되었습니다!');
+                        document.getElementById('phoneAuth-button').disabled = true;
+                        document.getElementById('phone').disabled = true;
+                        document.getElementById('phoneAuth').disabled = true;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('인증되지 않았습니다!');
+                    });
+            }
         </script>
     </div>
 </body>
