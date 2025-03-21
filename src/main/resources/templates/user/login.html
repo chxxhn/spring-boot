@@ -9,7 +9,7 @@
 <div th:fragment="content">
   <h2>로그인</h2>
   <div th:if="${loginError}" class="error-message">잘못된 id 또는 비밀번호</div>
-  <div th:if="${loginLocked}" class="error-message">3번 이상 로그인 시도</div>
+
   <form th:action="@{/login}" method="post">
     <label for="username">Id:</label>
     <input type="text" id="username" name="username" required><br>
@@ -19,7 +19,17 @@
 
     <button type="submit">로그인</button>
   </form>
-</div>
 
+<!--  <div>-->
+<!--    <a href="https://kauth.kakao.com/oauth/authorize?client_id=0bba7710cf392fabd1cceda7ae359050&redirect_uri=http://localhost:8080/oauth/callback/kakao&response_type=code">-->
+<!--      <img src="/kakao_login_medium_narrow.png">-->
+<!--    </a>-->
+<!--  </div>-->
+<!--  <div>-->
+<!--    <a href="https://nid.naver.com/oauth2.0/authorize?client_id=6e0pJHO14ubVyCFXI59f&redirect_uri=http://localhost:8080/oauth/callback/naver&response_type=code&state=RANDOM_STRING">-->
+<!--      <img src="/btnW_완성형.png">-->
+<!--    </a>-->
+<!--  </div>-->
+</div>
 </body>
 </html>

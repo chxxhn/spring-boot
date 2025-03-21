@@ -1,18 +1,11 @@
 package com.example.mariadb_demo.user;
 
-import com.example.mariadb_demo.mail.MailRequestDTO;
-import com.example.mariadb_demo.mail.MailService;
 import jakarta.validation.Valid;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 public class UserController {

@@ -1,11 +1,16 @@
 package com.example.mariadb_demo.user;
 
+import com.example.mariadb_demo.OAuth.OAuthProvider;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 @Entity
 @Table(name = "CT_USERS")
 @Data
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ApplicationUser {
 
     @Id
@@ -26,6 +31,8 @@ public class ApplicationUser {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    private OAuthProvider oauthProvider;
 
     private boolean enabled = true;
 

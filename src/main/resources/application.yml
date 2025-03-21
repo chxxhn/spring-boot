@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mariadb://localhost:3306/test_db
-    username: root
-    password: 1234
+    url: jdbc:mariadb://sti.iptime.org:3306/animalskin
+    username: chkim
+    password: Qwer1234!@#$
     driver-class-name: org.mariadb.jdbc.Driver
 
   jpa:
@@ -37,10 +37,33 @@ spring:
         enabled: false
 
   coolsms:
-    apikey: NCSPVFGMA894IBOX
-    apisecret: TBPVJLLCPSVVOKE7HVNOAUOGY3BJRW98
-    fromnumber: 01045710803
+    apikey: NCS6L9Q9DGJ9BQRC
+    apisecret: HHRCPSGSYSKPQ57MTX1QPSZPLJ12ZB8A
+    fromnumber: 01071595466
     provider: https://api.coolsms.co.kr
+
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          kakao:
+#            client-id: 0bba7710cf392fabd1cceda7ae359050
+#            redirect_uri: http://localhost:8080/auth/login/kakao
+jwt:
+  secret-key: li4dGeRko4KZS2XE7Pt1KL1aookwWydTg3sqQzXEMduKz8kArz9Rlq2fuCBAtVSLJFOWNgGQQBRSh+hTZ6pXLA==
+
+oauth:
+  kakao:
+    client-id: 0bba7710cf392fabd1cceda7ae359050
+    url:
+      auth: https://kauth.kakao.com
+      api: https://kapi.kakao.com
+  naver:
+    secret: jdtulf6BuG
+    client-id: 6e0pJHO14ubVyCFXI59f
+    url:
+      auth: https://nid.naver.com
+      api: https://openapi.naver.com
 
 server:
   servlet:
