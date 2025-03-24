@@ -1,6 +1,5 @@
 package com.example.mariadb_demo.user;
 
-import com.example.mariadb_demo.OAuth.OAuthProvider;
 import jakarta.persistence.*;
 import lombok.*;
 
