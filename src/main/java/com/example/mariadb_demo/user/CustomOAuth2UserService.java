@@ -20,9 +20,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String provider = request.getClientRegistration().getRegistrationId(); // "kakao" or "naver"
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String email = extractEmail(provider, attributes);
+        String name = extractName(provider, attributes);
+        String phone = extractPhone(provider, attributes);
 
         ApplicationUser user = userRepository.findByEmail(email)
-                .orElseGet(() -> registerUser(provider, email));
+                .orElseGet(() -> registerUser(provider, email, name, phone));
         return new CustomUserDetails(user, attributes); // Spring Security 세션 저장
     }
 
@@ -37,12 +39,32 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return null;
     }
 
-    private ApplicationUser registerUser(String provider, String email) {
+    private String extractName(String provider, Map<String, Object> attributes) {
+        if ("kakao".equals(provider)) {
+            Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+            return (String) properties.get("nickname"); // 실명 아님, 닉네임
+        } else if ("naver".equals(provider)) {
+            Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+            return (String) response.get("name"); // 네이버는 실명 가능
+        }
+        return null;
+    }
+
+    private String extractPhone(String provider, Map<String, Object> attributes) {
+        if ("naver".equals(provider)) {
+            Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+            return (String) response.get("mobile"); // 네이버는 전화번호 가능
+        }
+        return null;
+    }
+
+    private ApplicationUser registerUser(String provider, String email, String name, String phone) {
         ApplicationUser user = ApplicationUser.builder()
                 .email(email)
-                .username(email.split("@")[0])
+                .username(name != null ? name : email.split("@")[0])
                 .password("") // 소셜 로그인은 비밀번호 없음
                 .oauthProvider(OAuthProvider.valueOf(provider.toUpperCase()))
+                .phone(phone)
                 .role(UserRole.USER)
                 .enabled(true)
                 .build();

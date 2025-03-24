@@ -38,7 +38,7 @@ public class SmsUtil {
         //발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 함!!
         message.setFrom(fromNumber);
         message.setTo(to);
-        message.setText("[권윤재바보] 인증번호를 입력해 주세요\n" + verificationCode);
+        message.setText("[Ｗｅｂ 발신] 인증번호를 입력해 주세요\n" + verificationCode);
 
         try {
             SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));

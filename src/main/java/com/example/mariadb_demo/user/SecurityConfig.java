@@ -29,7 +29,7 @@ public class SecurityConfig {
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .defaultSuccessUrl("/")
-                        .usernameParameter("username")
+                        .usernameParameter("email")
                         .permitAll()
                         .failureHandler(customAuthenticationFailureHandler)
                 )

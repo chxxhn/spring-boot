@@ -12,6 +12,7 @@ import java.util.Map;
 
 @RestController
 public class MailController {
+
     private final MailService mailService;
 
     public MailController(MailService mailService) {

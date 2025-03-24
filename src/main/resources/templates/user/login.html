@@ -11,8 +11,8 @@
   <div th:if="${loginError}" class="error-message">잘못된 id 또는 비밀번호</div>
 
   <form th:action="@{/login}" method="post">
-    <label for="username">Id:</label>
-    <input type="text" id="username" name="username" required><br>
+    <label for="email">이메일:</label>
+    <input type="email" id="email" name="email" required><br>
 
     <label for="password">비밀번호:</label>
     <input type="password" id="password" name="password" required><br>

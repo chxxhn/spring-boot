@@ -36,12 +36,12 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getPassword() {
-        return user.getPassword(); // 소셜 로그인은 "" 가능
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername(); // email로도 가능
+        return user.getEmail();
     }
 
     @Override
@@ -58,7 +58,6 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
         return user.isEnabled();
     }
 
-    // OAuth2User에서 필요한 메서드
     @Override
     public Map<String, Object> getAttributes() {
         return attributes;
@@ -66,6 +65,6 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getName() {
-        return user.getUsername(); // 또는 attributes.get("id").toString()
+        return user.getUsername();
     }
 }

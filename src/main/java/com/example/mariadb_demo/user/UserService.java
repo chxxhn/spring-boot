@@ -24,18 +24,19 @@ public class UserService {
         if (userRepository.existsByPhone(userDTO.getPhone())) {
             throw new IllegalArgumentException("이미 등록된 전화번호입니다.");
         }
-        if (!mailService.isEmailVerified(userDTO.getEmail())) {
+        /*if (!mailService.isEmailVerified(userDTO.getEmail())) {
             throw new IllegalArgumentException("이메일 인증이 완료되지 않았습니다.");
         }
         if (!smsService.isPhoneVerified(userDTO.getPhone())) {
             throw new IllegalArgumentException("전화번호 인증이 완료되지 않았습니다.");
-        }
+        }*/
         ApplicationUser user = new ApplicationUser();
         user.setUsername(userDTO.getUsername());
         user.setEmail(userDTO.getEmail());
         user.setPassword(passwordEncoder.encode(userDTO.getPassword1()));
         user.setPhone(userDTO.getPhone());
         user.setRole(UserRole.USER);
+        user.setOauthProvider(OAuthProvider.LOCAL);
         this.userRepository.save(user);
         return user;
     }

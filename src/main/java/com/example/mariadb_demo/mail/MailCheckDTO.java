@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class MailCheckDTO {
+
     private String email;
     private String authNum;
+
 }
