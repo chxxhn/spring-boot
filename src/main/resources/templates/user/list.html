@@ -1,20 +1,55 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
     <title>회원 목록</title>
 </head>
 <body>
 <h2>회원 목록</h2>
-<table border="1">
-    <tr>
-        <th>아이디</th>
-        <th>이메일</th>
-    </tr>
-    <tr th:each="user : ${users}">
-        <td th:text="${user.name}"></td>
-        <td th:text="${user.email}"></td>
-    </tr>
-</table>
-<a href="/">홈으로</a>
+<div th:fragment="content">
+    <table border="1">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>이름</th>
+            <th>이메일</th>
+            <th>전화번호</th>
+            <th>로그인 방법</th>
+            <th>권한</th>
+            <th>활성화 여부</th>
+            <th>마지막 로그인</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.phone}"></td>
+            <td th:text="${user.oauthProvider}"></td>
+            <td th:text="${user.role}"></td>
+            <td th:text="${user.enabled}"></td>
+            <td th:text="${user.lastLoginAt != null ? #temporals.format(user.lastLoginAt, 'yyyy/MM/dd HH:mm:ss') : '미접속'}"></td>
+            <td>
+                <span th:if="${user.role.name() != 'ADMIN'}">
+                    <a th:href="@{'/admin/delete/' + ${user.id}}"
+                        onclick="return confirm('정말 삭제하시겠습니까?');">삭제
+                    </a>
+                </span>
+                <span th:if="${user.role.name() == 'ADMIN'}">관리자 보호</span>
+            </td>
+            <td>
+            <span th:if="${user.role.name() != 'ADMIN'}">
+                <a th:if="${user.enabled}" th:href="@{'/admin/deactivate/' + ${user.id}}" onclick="return confirm('정말 비활성화하시겠습니까?');">비활성화</a>
+                <a th:if="${!user.enabled}" th:href="@{'/admin/activate/' + ${user.id}}" onclick="return confirm('정말 활성화하시겠습니까?');">활성화</a>
+            </span>
+                <span th:if="${user.role.name() == 'ADMIN'}">관리자 보호</span>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+    <a href="/">홈으로</a>
+</div>
 </body>
 </html>

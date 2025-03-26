@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>spring boot practice</title>
@@ -10,16 +10,18 @@
 
 <nav class="navbar">
     <div class="nav-container">
-        <a href="/" class="logo">홈버튼</a>
-        <div class="nav-user" th:if="${user}">
-            <span style="color: white;">안녕하세요, <span th:text="${user.name}"></span>님!</span>
+        <a href="/" class="logo">Home</a>
+        <div th:if="${user != null}" class="nav-users" style="color: white">
+            안녕하세요, <span th:text="${user.username}">사용자명</span>님!
         </div>
         <div class="nav-links">
-            <a th:href="@{/login}" class="btn" th:if="${user == null}">로그인</a>
-            <a th:href="@{/logout}" class="btn" th:if="${user != null}">로그아웃</a>
-        </div>
-        <div class="nav-links">
-            <a th:href="@{/signup}" class="btn">회원가입</a>
+            <ul>
+                <li class="nav-item">
+                    <a th:href="@{/login}" class="btn" sec:authorize="isAnonymous()">로그인</a>
+                    <a th:href="@{/logout}" class="btn" sec:authorize="isAuthenticated()">로그아웃</a>
+                    <a th:href="@{/signup}" class="btn">회원가입</a>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>

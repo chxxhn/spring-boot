@@ -1,5 +1,6 @@
-package com.example.mariadb_demo.user;
+package com.example.mariadb_demo.user.login;
 
+import com.example.mariadb_demo.user.ApplicationUser;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -45,13 +46,19 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
     }
 
     @Override
-    public boolean isAccountNonExpired() { return true; }
+    public boolean isAccountNonExpired() {
+        return user.isAccountNonExpired();
+    }
 
     @Override
-    public boolean isAccountNonLocked() { return true; }
+    public boolean isAccountNonLocked() {
+        return user.isAccountNonLocked();
+    }
 
     @Override
-    public boolean isCredentialsNonExpired() { return true; }
+    public boolean isCredentialsNonExpired() {
+        return user.isCredentialsNonExpired();
+    }
 
     @Override
     public boolean isEnabled() {

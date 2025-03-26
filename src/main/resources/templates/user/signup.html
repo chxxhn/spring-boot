@@ -16,27 +16,33 @@
             <input type="text" id="username" th:field="*{username}" required><br>
             <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" style="color: red;"></div>
 
-
             <label for="email">이메일:</label>
-            <input type="email" id="email" th:field="*{email}" required>
+            <input type="email" id="email" th:field="*{email}" required >
+            <input type="hidden" id="hiddenEmail" name="hiddenEmail">
             <button type="button" id="email-button">인증번호 전송</button>
             <br>
             <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color: red;"></div>
 
-            <div id="emailAuth-section">
-                <label for="emailAuth">이메일 인증번호 입력</label>
+            <div id="emailAuth-section" style="display: none;">
+                <label for="emailAuth">이메일 인증번호 입력:</label>
                 <input type="text" id="emailAuth" placeholder="인증번호 입력">
                 <button type="button" id="emailAuth-button">인증</button>
             </div>
 
-            <label for="phone">전번:</label>
-            <input type="tel" id="phone" th:field="*{phone}" required>
+            <label for="phone">전화번호:</label>
+            <input type="tel" id="phone1" maxlength="3" placeholder="010" required>
+            -
+            <input type="tel" id="phone2" maxlength="4" placeholder="0000" required>
+            -
+            <input type="tel" id="phone3" maxlength="4" placeholder="0000" required>
+            <input type="hidden" id="phone" name="phone" th:field="*{phone}">
+            <input type="hidden" id="hiddenPhone" name="hiddenPhone">
             <button type="button" id="phone-button" onclick="sendSMS()">인증번호 전송</button>
             <br>
             <div th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" style="color: red;"></div>
 
-            <div id="phoneAuth-section">
-                <label for="phoneAuth">전화번호 인증번호 입력</label>
+            <div id="phoneAuth-section" style="display: none;">
+                <label for="phoneAuth">전화번호 인증번호 입력:</label>
                 <input type="text" id="phoneAuth" placeholder="인증번호 입력">
                 <button type="button" id="phoneAuth-button" onclick="verifySMS()">인증</button>
             </div>
@@ -69,6 +75,7 @@
                         success: function (code) {
                             if (code) {
                                 alert("입력하신 메일로 인증번호가 전송되었습니다.");
+                                $("#emailAuth-section").show();
                             } else {
                                 alert("인증번호를 받을 수 없습니다.");
                             }
@@ -93,6 +100,10 @@
                         success: function (message) {
                             if (message) {
                                 alert("이메일 인증에 성공하였습니다.");
+                                document.getElementById('hiddenEmail').value = email.trim().replace(/,/g, '');
+                                document.getElementById('emailAuth-button').disabled = true;
+                                document.getElementById('email').readonly = true;
+                                document.getElementById('emailAuth').disabled = true;
                             } else {
                                 alert("인증에 실패하였습니다.");
                             }
@@ -109,8 +120,20 @@
             });
         </script>
         <script>
+            function getFullPhoneNumber() {
+                const phone1 = document.getElementById("phone1").value.trim();
+                const phone2 = document.getElementById("phone2").value.trim();
+                const phone3 = document.getElementById("phone3").value.trim();
+                return phone1 + phone2 + phone3;
+            }
+
+            $("form").on("submit", function () {
+                const fullPhone = getFullPhoneNumber();
+                $("#phone").val(fullPhone);
+            });
+
             async function sendSMS() {
-                const phone = document.getElementById("phone").value;
+                const phone = getFullPhoneNumber();
 
                 const data = {
                     phone: phone
@@ -131,6 +154,7 @@
                     })
                     .then(data => {
                         alert('인증번호를 보냈습니다!');
+                        document.getElementById("phoneAuth-section").style.display = "block";
                     })
                     .catch(error => {
                         console.error('Error:', error);
@@ -138,7 +162,7 @@
                     });
             }
             async function verifySMS() {
-                const phone = document.getElementById('phone').value;
+                const phone = getFullPhoneNumber();
                 const certificationNumber = document.getElementById('phoneAuth').value;
 
                 const data = {
@@ -160,8 +184,11 @@
                     })
                     .then(data => {
                         alert('인증되었습니다!');
+                        document.getElementById('hiddenPhone').value = phone.trim().replace(/,/g, '');
                         document.getElementById('phoneAuth-button').disabled = true;
-                        document.getElementById('phone').disabled = true;
+                        document.getElementById('phone1').readOnly = true;
+                        document.getElementById('phone2').readOnly = true;
+                        document.getElementById('phone3').readOnly = true;
                         document.getElementById('phoneAuth').disabled = true;
                     })
                     .catch(error => {

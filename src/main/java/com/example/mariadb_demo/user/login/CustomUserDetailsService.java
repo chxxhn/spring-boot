@@ -1,6 +1,7 @@
-package com.example.mariadb_demo.user;
+package com.example.mariadb_demo.user.login;
 
-import org.springframework.security.authentication.LockedException;
+import com.example.mariadb_demo.user.ApplicationUser;
+import com.example.mariadb_demo.user.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

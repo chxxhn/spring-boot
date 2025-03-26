@@ -8,8 +8,12 @@
 
 <div th:fragment="content">
   <h2>로그인</h2>
-  <div th:if="${loginError}" class="error-message">잘못된 id 또는 비밀번호</div>
-
+  <div th:if="${loginErrorMessage}">
+    <script th:inline="javascript">
+      let message = [[${loginErrorMessage}]];
+      alert(message);
+    </script>
+  </div>
   <form th:action="@{/login}" method="post">
     <label for="email">이메일:</label>
     <input type="email" id="email" name="email" required><br>

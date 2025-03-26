@@ -1,7 +1,10 @@
 package com.example.mariadb_demo.user;
 
+import com.example.mariadb_demo.user.login.OAuthProvider;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "CT_USERS")
@@ -25,7 +28,6 @@ public class ApplicationUser {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true)
     private String phone;
 
     @Enumerated(EnumType.STRING)
@@ -35,5 +37,17 @@ public class ApplicationUser {
     private OAuthProvider oauthProvider;
 
     private boolean enabled = true;
+
+    private boolean accountNonExpired = true;
+
+    private boolean accountNonLocked = true;
+
+    private boolean credentialsNonExpired = true;
+
+    private LocalDateTime lastLoginAt;
+
+    public void updateLastLoginTime() {
+        this.lastLoginAt = LocalDateTime.now();
+    }
 
 }
