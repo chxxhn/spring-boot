@@ -1,14 +1,13 @@
 package com.example.mariadb_demo.mail;
 
+import com.example.mariadb_demo.exception.CustomExceptions;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Value;
-
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -24,65 +23,64 @@ public class MailService {
         this.redisConfig = redisConfig;
     }
 
-    private int authNumber;
-
     @Value("${spring.mail.username}")
     private String serviceName;
-    
-    public void makeRandomNum() {
-        Random r = new Random();
-        String randomNumber = "";
-        for(int i = 0; i < 6; i++) {
-            randomNumber += Integer.toString(r.nextInt(10));
-        }
 
-        authNumber = Integer.parseInt(randomNumber);
+    private int generateRandomNumber() {
+        Random r = new Random();
+        StringBuilder randomNumber = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            randomNumber.append(r.nextInt(10));
+        }
+        return Integer.parseInt(randomNumber.toString());
     }
 
-    public void mailSend(String setFrom, String toMail, String title, String content) {
+    public void mailSend(String setFrom, String toMail, String title, String content, int authNumber) {
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
-            MimeMessageHelper helper = new MimeMessageHelper(message,true,"utf-8");
-            helper.setFrom(setFrom); // service name
-            helper.setTo(toMail); // customer email
-            helper.setSubject(title); // email title
-            helper.setText(content,true); // content, html: true
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "utf-8");
+            helper.setFrom(setFrom);
+            helper.setTo(toMail);
+            helper.setSubject(title);
+            helper.setText(content, true);
             javaMailSender.send(message);
         } catch (MessagingException e) {
-            e.printStackTrace(); // 에러 출력
+            e.printStackTrace();
         }
-        // redis에 3분 동안 이메일과 인증 코드 저장
+        // Redis에 30초 동안 이메일과 인증 코드를 저장
         ValueOperations<String, String> valOperations = redisConfig.redisTemplate().opsForValue();
-        valOperations.set(toMail, Integer.toString(authNumber), 180, TimeUnit.SECONDS);
+        valOperations.set(toMail, Integer.toString(authNumber), 30, TimeUnit.SECONDS);
     }
 
     public String joinEmail(String email) {
-        makeRandomNum();
-        String customerMail = email;
+        int authNumber = generateRandomNumber();
         String title = "회원 가입을 위한 이메일입니다!";
-        String content =
-                "이메일을 인증하기 위한 절차입니다." +
-                        "<br><br>" +
-                        "인증 번호는 " + authNumber + "입니다." +
-                        "<br>" +
-                        "회원 가입 폼에 해당 번호를 입력해주세요.";
-        mailSend(serviceName, customerMail, title, content);
+        String content = "이메일을 인증하기 위한 절차입니다." +
+                "<br><br>" +
+                "인증 번호는 " + authNumber + "입니다." +
+                "<br>" +
+                "회원 가입 폼에 해당 번호를 입력해주세요.";
+        mailSend(serviceName, email, title, content, authNumber);
         return Integer.toString(authNumber);
     }
 
     public Boolean checkAuthNum(String email, String authNum) {
         ValueOperations<String, String> valOperations = redisConfig.redisTemplate().opsForValue();
         String code = valOperations.get(email);
-        if (Objects.equals(code, authNum)) {
-            valOperations.set("email:verified:" + email, "true", 10, TimeUnit.MINUTES);
-            return true;
-        } else
-            return false;
+        if (code == null) {
+            throw new CustomExceptions.EmailExpiredException("인증 시간이 초과되었습니다.");
+        }
+
+        if (!Objects.equals(code, authNum)) {
+            throw new CustomExceptions.EmailCodeMismatchException("인증번호가 일치하지 않습니다.");
+        }
+
+        valOperations.set("email:verified:" + email, "true", 10, TimeUnit.MINUTES);
+        return true;
     }
 
     public boolean isEmailVerified(String email) {
         ValueOperations<String, String> valOperations = redisConfig.redisTemplate().opsForValue();
         return "true".equals(valOperations.get("email:verified:" + email));
     }
-
 }

@@ -31,7 +31,7 @@ public class MailConfig {
         javaMailProperties.put("mail.smtp.starttls.enable", "true");
         javaMailProperties.put("mail.debug", "true");
         javaMailProperties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-        // TLS를 사용할 경우 socketFactory 설정은 제거합니다.
+
         mailSender.setJavaMailProperties(javaMailProperties);
 
         return mailSender;

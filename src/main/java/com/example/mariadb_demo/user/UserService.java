@@ -24,9 +24,9 @@ public class UserService {
             throw new CustomExceptions.UserAlreadyExistsException("이미 등록된 이메일입니다.");
         }
 
-//        if (!mailService.isEmailVerified(userDTO.getEmail())) {
-//            throw new CustomExceptions.EmailNotVerifiedException("이메일 인증이 완료되지 않았습니다.");
-//        }
+        if (!mailService.isEmailVerified(userDTO.getEmail())) {
+            throw new CustomExceptions.EmailNotVerifiedException("이메일 인증이 완료되지 않았습니다.");
+        }
 //
 //        if (!smsService.isPhoneVerified(userDTO.getPhone())) {
 //            throw new CustomExceptions.PhoneNotVerifiedException("전화번호 인증이 완료되지 않았습니다.");
@@ -67,6 +67,10 @@ public class UserService {
 
         user.setEnabled(status);
         userRepository.save(user);
+    }
+
+    public boolean isEmailDuplicated(String email) {
+        return userRepository.existsByEmail(email);
     }
 
 }

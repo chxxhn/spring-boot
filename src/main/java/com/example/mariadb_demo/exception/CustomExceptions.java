@@ -26,4 +26,16 @@ public class CustomExceptions {
         }
     }
 
+    public static class EmailExpiredException extends RuntimeException {
+        public EmailExpiredException(String message) {
+            super(message);
+        }
+    }
+
+    public static class EmailCodeMismatchException extends RuntimeException {
+        public EmailCodeMismatchException(String message) {
+            super(message);
+        }
+    }
+
 }

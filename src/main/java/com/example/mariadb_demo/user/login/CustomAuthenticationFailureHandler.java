@@ -21,13 +21,12 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
                                         HttpServletResponse response,
                                         AuthenticationException exception)
             throws IOException, ServletException {
-        String username = request.getParameter("username");
-        if(exception instanceof DisabledException) {
-            defaultRedirectStrategy.sendRedirect(request, response, "/login-disabled");
-            return;
+        if (exception.getMessage().contains("비활성화된 계정")) {
+            request.getSession().setAttribute("loginErrorMessage", "비활성화된 계정입니다.");
+        } else {
+            request.getSession().setAttribute("loginErrorMessage", "로그인 실패");
         }
-        else {
-            response.sendRedirect("/login-error");
-        }
+
+        response.sendRedirect("/login?error");
     }
 }

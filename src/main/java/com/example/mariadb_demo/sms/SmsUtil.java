@@ -32,9 +32,9 @@ public class SmsUtil {
         this.messageService = NurigoApp.INSTANCE.initialize(apiKey, apiSecretKey, provider);
     }
 
-    //단일 메시지 발송 예제
     public SingleMessageSentResponse sendSMS(String to, String verificationCode) {
         Message message = new Message();
+
         //발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 함!!
         message.setFrom(fromNumber);
         message.setTo(to);
@@ -46,8 +46,8 @@ public class SmsUtil {
             return response;
         } catch (Exception e) {
             System.out.println("Exception while sending SMS: " + e.getMessage());
-            e.printStackTrace(); // 스택 트레이스 출력
-            throw e; // 예외를 다시 던져서 상위 메서드로 전파
+            e.printStackTrace();
+            throw e;
         }
     }
 }

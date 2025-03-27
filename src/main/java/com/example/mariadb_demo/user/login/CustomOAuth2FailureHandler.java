@@ -20,7 +20,7 @@ public class CustomOAuth2FailureHandler implements AuthenticationFailureHandler 
         if (exception.getMessage().contains("비활성화된 계정")) {
             request.getSession().setAttribute("loginErrorMessage", "비활성화된 계정입니다.");
         } else {
-            request.getSession().setAttribute("loginErrorMessage", "소셜 로그인 실패");
+            request.getSession().setAttribute("loginErrorMessage", "로그인 실패");
         }
 
         response.sendRedirect("/login?error");

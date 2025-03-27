@@ -17,6 +17,7 @@
             <th>로그인 방법</th>
             <th>권한</th>
             <th>활성화 여부</th>
+            <th>회원가입 시간</th>
             <th>마지막 로그인</th>
         </tr>
         </thead>
@@ -29,6 +30,7 @@
             <td th:text="${user.oauthProvider}"></td>
             <td th:text="${user.role}"></td>
             <td th:text="${user.enabled}"></td>
+            <td th:text="${#temporals.format(user.createdAt, 'yyyy/MM/dd HH:mm:ss')}"></td>
             <td th:text="${user.lastLoginAt != null ? #temporals.format(user.lastLoginAt, 'yyyy/MM/dd HH:mm:ss') : '미접속'}"></td>
             <td>
                 <span th:if="${user.role.name() != 'ADMIN'}">

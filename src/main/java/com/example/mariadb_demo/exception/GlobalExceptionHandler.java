@@ -28,4 +28,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
     }
 
+    @ExceptionHandler(CustomExceptions.EmailCodeMismatchException.class)
+    public ResponseEntity<String> handleEmailCodeMismatch(CustomExceptions.EmailCodeMismatchException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(CustomExceptions.EmailExpiredException.class)
+    public ResponseEntity<String> handleEmailExpired(CustomExceptions.EmailExpiredException ex) {
+        return ResponseEntity.status(HttpStatus.GONE).body(ex.getMessage());
+    }
 }
+

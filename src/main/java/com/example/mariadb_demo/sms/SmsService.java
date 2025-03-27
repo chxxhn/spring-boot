@@ -40,8 +40,4 @@ public class SmsService {
         return false;
     }
 
-    public boolean isPhoneVerified(String phone) {
-        ValueOperations<String, String> valOperations = redisConfig.redisTemplate().opsForValue();
-        return "true".equals(valOperations.get("sms:verified:" + phone));
-    }
 }

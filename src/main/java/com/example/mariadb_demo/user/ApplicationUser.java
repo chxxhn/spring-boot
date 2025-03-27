@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ApplicationUser {
+public class ApplicationUser extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,12 +37,6 @@ public class ApplicationUser {
     private OAuthProvider oauthProvider;
 
     private boolean enabled = true;
-
-    private boolean accountNonExpired = true;
-
-    private boolean accountNonLocked = true;
-
-    private boolean credentialsNonExpired = true;
 
     private LocalDateTime lastLoginAt;
 
