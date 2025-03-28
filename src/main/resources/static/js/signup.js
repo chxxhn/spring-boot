@@ -164,8 +164,16 @@ function getFullPhoneNumber() {
 }
 
 async function sendSMS() {
-    const phone = getFullPhoneNumber();
+    const phone1 = document.getElementById("phone1").value.trim();
+    const phone2 = document.getElementById("phone2").value.trim();
+    const phone3 = document.getElementById("phone3").value.trim();
 
+    if (phone1.length !== 3 || phone2.length !== 4 || phone3.length !== 4) {
+        alert("올바른 전화번호 형식이 아닙니다. (예: 010-1234-5678)");
+        return;
+    }
+
+    const phone = phone1 + phone2 + phone3;
     const data = { phone: phone };
 
     fetch("http://localhost:8080/signup/sms", {

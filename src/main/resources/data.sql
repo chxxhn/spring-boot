@@ -1,5 +1,4 @@
-UPDATE ct_users
-SET role = 'ADMIN'
-WHERE email = 'admin@naver.com';
+DELETE from ct_users
+WHERE email = 'chaehhyun0803@pusan.ac.kr';
 
 
