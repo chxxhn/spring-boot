@@ -6,7 +6,13 @@
 </head>
 <body>
 <div th:fragment="content">
-    <h2>질문 목록</h2>
+    <h2>질문게시판</h2>
+
+<!--    추후 기능 구현-->
+    <form th:action="@{/question}" method="get" style="margin-bottom: 20px;">
+        <input type="text" name="keyword" placeholder="검색어를 입력하세요" />
+        <button type="submit">검색</button>
+    </form>
 
     <a th:href="@{/question/add}">
         <button type="button">질문 추가</button>
