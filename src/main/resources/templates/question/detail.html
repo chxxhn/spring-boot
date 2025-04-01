@@ -1,0 +1,135 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>질문 상세</title>
+    <style>
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            max-width: 600px;
+            position: relative;
+        }
+        .card-actions {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+        }
+        .card-actions form {
+            display: inline;
+        }
+        .card-actions button {
+            margin-left: 4px;
+        }
+        .card-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .card-content {
+            margin-bottom: 12px;
+            white-space: pre-line;
+        }
+        .card-footer {
+            font-size: 0.9em;
+            color: gray;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+<div th:fragment="content">
+    <div class="card">
+        <div class="card-actions"
+             th:if="${#authentication.name == question.user.email or #authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+            <a th:if="${#authentication.name == question.user.email}"
+               th:href="@{/question/edit/{id}(id=${question.id})}">
+                <button type="button">수정</button>
+            </a>
+            <form th:action="@{/question/delete/{id}(id=${question.id})}" method="post">
+                <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</button>
+            </form>
+        </div>
+        <div class="card-title" th:text="${question.title}">제목</div>
+        <div class="card-content" th:text="${question.content}">내용</div>
+        <div class="card-footer">
+            <span th:text="'작성일: ' + ${#temporals.format(question.updatedAt, 'yy/MM/dd HH:mm')}"></span>
+            <span th:if="${!#temporals.format(question.createdAt, 'yyyy-MM-dd HH:mm')
+              .equals(#temporals.format(question.updatedAt, 'yyyy-MM-dd HH:mm'))}">(수정됨)</span>
+            |
+            <span th:text="'작성자: ' + ${question.user != null ? question.user.username : '익명'}"></span>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <a th:href="@{/question}">
+            <button type="button">질문게시판으로 돌아가기</button>
+        </a>
+    </div>
+
+    <div class="card" style="margin-top: 30px;">
+        <h3>댓글</h3>
+
+        <ul th:if="${#lists.isEmpty(comments)} == false">
+            <li th:each="comment : ${comments}" th:id="'comment-' + ${comment.id}" style="margin-bottom: 20px;">
+                <div th:id="'view-mode-' + ${comment.id}">
+                    <p th:text="${comment.content}">댓글 내용</p>
+                    <small>
+                        <span th:text="'작성일: ' + ${#temporals.format(comment.updatedAt, 'yy/MM/dd HH:mm')}"></span>
+                        <span th:if="${!#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm')
+                               .equals(#temporals.format(comment.updatedAt, 'yyyy-MM-dd HH:mm'))}">(수정됨)</span>
+                        |
+                        <span th:text="'작성자: ' + ${comment.user.username}"></span>
+                    </small>
+                    <div style="margin-top: 5px;"
+                         th:if="${#authentication.name == comment.user.email}">
+                        <button type="button" th:onclick="'toggleEditMode(' + ${comment.id} + ')'">수정</button>
+                    </div>
+                    <div style="margin-top: 5px;"
+                         th:if="${#authentication.name == comment.user.email or #authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+                        <form th:action="@{/comment/delete/{id}(id=${comment.id})}" method="post" style="display:inline;">
+                            <button type="submit" onclick="return confirm('댓글을 삭제할까요?')">삭제</button>
+                        </form>
+                    </div>
+                </div>
+                <div th:id="'edit-mode-' + ${comment.id}" style="display:none;"
+                     th:if="${#authentication.name == comment.user.email}">
+                    <form th:action="@{/comment/edit/{id}(id=${comment.id})}" method="post">
+                        <textarea name="content" rows="2" cols="50" th:text="${comment.content}"></textarea>
+                        <br/>
+                        <button type="submit">수정 완료</button>
+                        <button type="button" th:onclick="'toggleEditMode(' + ${comment.id} + ')'">취소</button>
+                    </form>
+                </div>
+            </li>
+        </ul>
+        <p th:if="${#lists.isEmpty(comments)}">댓글이 없습니다.</p>
+
+        <form th:action="@{/comment/add/{id}(id=${question.id})}" th:object="${commentDTO}" method="post">
+        <textarea th:field="*{content}" rows="3" cols="50" required></textarea>
+            <br/>
+            <button type="submit">댓글 작성</button>
+        </form>
+    </div>
+    <script th:if="${secretBlocked}">
+        alert("비밀글은 열람할 수 없습니다.");
+        history.back();
+    </script>
+    <script>
+        function toggleEditMode(commentId) {
+            const view = document.getElementById('view-mode-' + commentId);
+            const edit = document.getElementById('edit-mode-' + commentId);
+
+            if (edit.style.display === 'none') {
+                view.style.display = 'none';
+                edit.style.display = 'block';
+            } else {
+                view.style.display = 'block';
+                edit.style.display = 'none';
+            }
+        }
+    </script>
+</div>
+</body>
+</html>

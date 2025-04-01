@@ -9,10 +9,15 @@
 <th:block th:fragment="content">
   <h2>메인 페이지</h2>
 
-  <div sec:authorize="hasAuthority('ROLE_ADMIN')">
-    <a th:href="@{/admin}" class="btn">회원 조회하기</a>
-  </div>
+  <div style="display: flex; gap: 10px; margin-top: 20px;">
+    <div sec:authorize="hasAuthority('ROLE_ADMIN')">
+      <a th:href="@{/admin}" class="btn">회원 조회하기</a>
+    </div>
 
+    <div>
+      <a th:href="@{/question}" class="btn">질문게시판</a>
+    </div>
+  </div>
 </th:block>
 
 </body>

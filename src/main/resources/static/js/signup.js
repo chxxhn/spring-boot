@@ -128,7 +128,7 @@ $(document).ready(function () {
 
     $("#signup-form").on("submit", function (e) {
         e.preventDefault();
-        // 전화번호 전체를 하나의 값으로 설정
+
         const fullPhone = getFullPhoneNumber();
         $("#phone").val(fullPhone);
 

@@ -34,6 +34,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority(UserRole.ADMIN.getValue())
+                        .requestMatchers("/question/add", "/question/edit", "/question/delete", "/comment/**").authenticated()
                         .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
                 )
                 .formLogin(formLogin -> formLogin

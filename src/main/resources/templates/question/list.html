@@ -1,0 +1,62 @@
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>질문게시판</title>
+</head>
+<body>
+<div th:fragment="content">
+    <h2>질문 목록</h2>
+
+    <a th:href="@{/question/add}">
+        <button type="button">질문 추가</button>
+    </a>
+
+    <a th:href="@{/}">
+        <button type="button">홈으로 돌아가기</button>
+    </a>
+
+    <table border="1">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>제목[댓글수]</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="question, stat : ${questionPage.content}"
+            th:onclick="|window.location.href='/question/${question.id}'|"
+            style="cursor: pointer;">
+            <td th:text="${stat.index + 1 + questionPage.number * questionPage.size}"></td>
+            <td th:text="${question.secret ? '비밀글' : question.title + ' [' + commentCounts[question.id] + ']'}"></td>
+            <td th:text="${question.secret ? '비밀글' : question.user.username}"></td>
+            <td th:text="${question.secret ? '비밀글' :
+                (#temporals.format(question.updatedAt, 'yy/MM/dd HH:mm')) +
+                (question.createdAt != question.updatedAt ? ' (수정됨)' : '')}"></td>
+            <td th:text="${question.secret ? '비밀글' : question.views}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 20px; text-align: center;">
+        <a th:href="@{/question(page=${questionPage.number - 1})}"
+           th:class="${questionPage.first} ? 'disabled' : ''">이전</a>
+
+        <span th:each="i : ${#numbers.sequence(0, questionPage.totalPages - 1)}">
+        <a th:href="@{/question(page=${i})}"
+           th:text="${i + 1}"
+           th:class="${i == questionPage.number} ? 'active' : ''"
+           style="margin: 0 5px; font-weight: bold;"
+        ></a>
+        </span>
+
+        <a th:href="@{/question(page=${questionPage.number + 1})}"
+           th:class="${questionPage.last} ? 'disabled' : ''">다음</a>
+    </div>
+
+</div>
+</body>
+</html>
