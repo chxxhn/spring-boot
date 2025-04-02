@@ -25,4 +25,13 @@ public class Notice extends BaseEntity {
     @JoinColumn(name = "user_id")
     private ApplicationUser user;
 
+    public Notice(String title, String content, ApplicationUser user) {
+        this.title = title;
+        this.content = content;
+        this.user = user;
+    }
+
+    protected Notice() {
+    }
+
 }

@@ -2,22 +2,28 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <title>공지 작성</title>
+    <title>공지 수정</title>
 </head>
 <body>
 <div th:fragment="content">
-    <h2>공지 작성하기</h2>
-    <form th:action="@{/notice/add}" th:object="${noticeDTO}" method="post">
+    <h2>공지 수정</h2>
+
+    <form th:action="@{/notice/edit/{id}(id=${notice.id})}" th:object="${notice}" method="post">
         <div>
             <label>제목:</label>
             <input type="text" th:field="*{title}" required />
         </div>
+
         <div>
             <label>내용:</label>
-            <textarea th:field="*{content}" required></textarea>
+            <textarea th:field="*{content}" rows="5" cols="60" required></textarea>
         </div>
+
         <div>
-            <button type="submit">등록</button>
+            <button type="submit">수정 완료</button>
+            <a th:href="@{/notice/{id}(id=${notice.id})}">
+                <button type="button">취소</button>
+            </a>
         </div>
     </form>
 </div>

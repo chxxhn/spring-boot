@@ -47,11 +47,11 @@ public class QuestionController {
     }
 
     @GetMapping("/add")
+    @PreAuthorize("isAuthenticated()")
     public String showAddQuestionPage(Model model) {
         model.addAttribute("questionDTO", new QuestionDTO());
         return "question/add";
     }
-
 
     @PostMapping("/add")
     @PreAuthorize("isAuthenticated()")
@@ -65,6 +65,7 @@ public class QuestionController {
     }
 
     @GetMapping("/edit/{questionId}")
+    @PreAuthorize("isAuthenticated()")
     public String showEditForm(@PathVariable Long questionId, Model model, @AuthenticationPrincipal CustomUserDetails userDetails) {
         Question question = questionService.findById(questionId);
         if (!question.getUser().getId().equals(userDetails.getUser().getId())) {
