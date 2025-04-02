@@ -19,7 +19,6 @@
                 <li class="nav-item">
                     <a th:href="@{/login}" class="btn" sec:authorize="isAnonymous()">로그인</a>
                     <a th:href="@{/logout}" class="btn" sec:authorize="isAuthenticated()">로그아웃</a>
-                    <a th:href="@{/signup}" class="btn">회원가입</a>
                 </li>
             </ul>
         </div>

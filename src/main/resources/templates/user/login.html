@@ -14,15 +14,6 @@
       alert(message);
     </script>
   </div>
-  <form th:action="@{/login}" method="post">
-    <label for="email">이메일:</label>
-    <input type="email" id="email" name="email" required><br>
-
-    <label for="password">비밀번호:</label>
-    <input type="password" id="password" name="password" required><br>
-
-    <button type="submit">로그인</button>
-  </form>
 
   <div>
     <a href="/oauth2/authorization/kakao">

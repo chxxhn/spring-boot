@@ -70,7 +70,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         ApplicationUser user = ApplicationUser.builder()
                 .email(email)
                 .username(name != null ? name : email.split("@")[0])
-                .password("") 
                 .oauthProvider(OAuthProvider.valueOf(provider.toUpperCase()))
                 .phone(phone)
                 .role(UserRole.USER)

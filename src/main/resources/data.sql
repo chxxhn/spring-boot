@@ -1,5 +1,4 @@
-UPDATE ct_users
-SET role = 'ADMIN'
-WHERE email = 'admin@naver.com';
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE comment;
 
-
+ALTER TABLE ct_users DROP COLUMN password;

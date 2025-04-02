@@ -15,34 +15,21 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
-
     private final CustomOAuth2FailureHandler customOAuth2FailureHandler;
-
-    private final CustomLoginSuccessHandler customLoginSuccessHandler;
-
     private final CustomOAuth2SuccessHandler customOAuth2SuccessHandler;
 
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomOAuth2FailureHandler customOAuth2FailureHandler, CustomLoginSuccessHandler customLoginSuccessHandler, CustomOAuth2SuccessHandler customOAuth2SuccessHandler) {
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomOAuth2FailureHandler customOAuth2FailureHandler, CustomOAuth2SuccessHandler customOAuth2SuccessHandler) {
         this.customOAuth2UserService = customOAuth2UserService;
         this.customOAuth2FailureHandler = customOAuth2FailureHandler;
-        this.customLoginSuccessHandler = customLoginSuccessHandler;
         this.customOAuth2SuccessHandler = customOAuth2SuccessHandler;
     }
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity http, CustomAuthenticationFailureHandler customAuthenticationFailureHandler) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority(UserRole.ADMIN.getValue())
                         .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
-                )
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/")
-                        .usernameParameter("email")
-                        .permitAll()
-                        .failureHandler(customAuthenticationFailureHandler)
-                        .successHandler(customLoginSuccessHandler)
                 )
                 .logout(logout -> logout
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
