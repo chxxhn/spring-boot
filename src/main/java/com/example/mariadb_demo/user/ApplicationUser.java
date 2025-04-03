@@ -7,7 +7,9 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "CT_USERS")
+@Table(name = "CT_USERS", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"oauthProvider", "oauthId"})
+})
 @Data
 @Getter
 @NoArgsConstructor
@@ -21,12 +23,19 @@ public class ApplicationUser extends BaseEntity{
     private Long id;
 
     @Column(nullable = false)
+    private String oauthId;
+
     private String username;
 
-    @Column(unique = true, nullable = false)
     private String email;
 
     private String phone;
+
+    private String gender;
+
+    private String birthYear;
+
+    private String birthday;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;

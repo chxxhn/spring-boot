@@ -14,11 +14,13 @@
             <th>이름</th>
             <th>이메일</th>
             <th>전화번호</th>
+            <th>성별</th>
+            <th>생일</th>
             <th>로그인 방법</th>
             <th>권한</th>
-            <th>활성화 여부</th>
             <th>회원가입 시간</th>
             <th>마지막 로그인</th>
+            <th>활성화</th>
         </tr>
         </thead>
         <tbody>
@@ -27,11 +29,13 @@
             <td th:text="${user.username}"></td>
             <td th:text="${user.email}"></td>
             <td th:text="${user.phone}"></td>
+            <td th:text="${user.gender}"></td>
+            <td th:text="${user.birthYear + '-' + user.birthday}"></td>
             <td th:text="${user.oauthProvider}"></td>
             <td th:text="${user.role}"></td>
-            <td th:text="${user.enabled}"></td>
             <td th:text="${#temporals.format(user.createdAt, 'yyyy/MM/dd HH:mm:ss')}"></td>
             <td th:text="${user.lastLoginAt != null ? #temporals.format(user.lastLoginAt, 'yyyy/MM/dd HH:mm:ss') : '미접속'}"></td>
+            <td th:text="${user.enabled}"></td>
             <td>
                 <span th:if="${user.role.name() != 'ADMIN'}">
                     <a th:href="@{'/admin/delete/' + ${user.id}}"

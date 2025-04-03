@@ -8,7 +8,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
 
   thymeleaf:
@@ -18,17 +18,6 @@ spring:
     mode: HTML
     cache: false
 
-  mail:
-    host: smtp.gmail.com
-    username: chaehyun08032@gmail.com
-    password: eoxocainowqttrno
-    properties:
-      mail:
-        smtp:
-          starttls:
-            enable: true
-            required: true
-
   data:
     redis:
       host: localhost
@@ -36,34 +25,34 @@ spring:
       repositories:
         enabled: false
 
-  coolsms:
-    apikey: NCS6L9Q9DGJ9BQRC
-    apisecret: HHRCPSGSYSKPQ57MTX1QPSZPLJ12ZB8A
-    fromnumber: 01071595466
-    provider: https://api.coolsms.co.kr
-
   security:
     oauth2:
       client:
         registration:
           kakao:
-            client-id: 0bba7710cf392fabd1cceda7ae359050
-            client-secret: CdRF8Ioxlzd7CNR9qIACjNzNhcYFq8kr
+            client-id: dccbd05e3ad4d1afab58c50495021e5e
+            client-secret: tOlEXTajl4Zy2ugOAmVqH0FK5ct5fMFl
             redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
             scope:
-              - profile_nickname
-              - profile_image
               - account_email
+              - name
+              - gender
+              - birthday
+              - birthyear
+              - phone_number
             client-name: kakao
           naver:
-            client-id: 6e0pJHO14ubVyCFXI59f
-            client-secret: jdtulf6BuG
+            client-id: vbe2oSyR86x5AaA6R8dW
+            client-secret: p7hzzYlGel
             scope:
               - name
               - email
-              - profile_image
+              - gender
+              - birthday
+              - birthyear
+              - mobile
             client-name: Naver
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/naver"
