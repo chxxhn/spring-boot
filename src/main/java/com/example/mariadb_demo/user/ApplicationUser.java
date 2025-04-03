@@ -27,6 +27,8 @@ public class ApplicationUser extends BaseEntity{
 
     private String username;
 
+    private String nickname;
+
     private String email;
 
     private String phone;

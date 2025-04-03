@@ -8,7 +8,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
 
   thymeleaf:
@@ -38,10 +38,12 @@ spring:
             scope:
               - account_email
               - name
+              - profile_nickname
               - gender
               - birthday
               - birthyear
               - phone_number
+              - shipping_address
             client-name: kakao
           naver:
             client-id: vbe2oSyR86x5AaA6R8dW
@@ -53,6 +55,7 @@ spring:
               - birthday
               - birthyear
               - mobile
+              - nickname
             client-name: Naver
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/naver"

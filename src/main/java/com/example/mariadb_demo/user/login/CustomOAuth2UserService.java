@@ -31,9 +31,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String gender = extractGender(provider, attributes);
         String birthday = extractBirthday(provider, attributes);
         String birthYear = extractBirthYear(provider, attributes);
+        String nickname = extractNickname(provider, attributes);
 
         ApplicationUser user = userRepository.findByOauthProviderAndOauthId(oauthProviderEnum, oauthId)
-                .orElseGet(() -> registerUser(oauthProviderEnum, oauthId, email, name, phone, gender, birthday, birthYear));
+                .orElseGet(() -> registerUser(oauthProviderEnum, oauthId, email, name, phone, gender, birthday, birthYear, nickname));
 
         if (!user.isEnabled()) {
             throw new OAuth2AuthenticationException(new OAuth2Error("disabled"), "비활성화된 계정입니다.");
@@ -118,8 +119,21 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return null;
     }
 
+    private String extractNickname(String provider, Map<String, Object> attributes) {
+        if ("kakao".equals(provider)) {
+            Map<String, Object> account = (Map<String, Object>) attributes.get("kakao_account");
+            Map<String, Object> profile = (Map<String, Object>) account.get("profile");
+            return (String) profile.get("nickname");
+        } else if ("naver".equals(provider)) {
+            Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+            return (String) response.get("nickname");
+        }
+        return null;
+    }
+
+
     private ApplicationUser registerUser(OAuthProvider provider, String oauthId, String email, String name,
-                                         String phone, String gender, String birthday, String birthYear) {
+                                         String phone, String gender, String birthday, String birthYear, String nickname) {
 
         ApplicationUser user = ApplicationUser.builder()
                 .oauthProvider(provider)
@@ -130,6 +144,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .gender(gender)
                 .birthday(birthday)
                 .birthYear(birthYear)
+                .nickname(nickname)
                 .role(UserRole.USER)
                 .enabled(true)
                 .build();
