@@ -56,3 +56,48 @@ body {
 .btn:hover {
     background: #0056b3;
 }
+
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    max-width: 600px;
+    position: relative;
+}
+
+.card-actions {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+.card-actions form {
+    display: inline;
+}
+
+.card-actions button {
+    margin-left: 4px;
+}
+
+.card-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.card-content {
+    margin-bottom: 12px;
+    white-space: pre-line;
+}
+
+.card-footer {
+    font-size: 0.9em;
+    color: gray;
+    text-align: right;
+}
+
+a.active {
+    color: red;
+    font-weight: bold;
+    text-decoration: underline;
+}

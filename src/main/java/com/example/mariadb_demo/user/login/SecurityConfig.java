@@ -28,7 +28,8 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(new AntPathRequestMatcher("/admin/**")).hasAuthority(UserRole.ADMIN.getValue())
+                        .requestMatchers(new AntPathRequestMatcher("/admin/**", "/notice/add")).hasAuthority(UserRole.ADMIN.getValue())
+                        .requestMatchers("/question/add", "/question/edit", "/question/delete", "/comment/**").authenticated()
                         .requestMatchers(new AntPathRequestMatcher("/**")).permitAll()
                 )
                 .logout(logout -> logout
