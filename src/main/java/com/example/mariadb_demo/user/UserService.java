@@ -1,8 +1,15 @@
 package com.example.mariadb_demo.user;
 
 import com.example.mariadb_demo.exception.CustomExceptions;
+import com.example.mariadb_demo.notice.Notice;
 import com.example.mariadb_demo.user.login.OAuthProvider;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +21,6 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public List<ApplicationUser> getAllUsers() {
-        return userRepository.findAll();
-    }
 
     public void deleteUserById(Long id) {
         ApplicationUser user = userRepository.findById(id)
@@ -38,6 +42,26 @@ public class UserService {
 
         user.setEnabled(status);
         userRepository.save(user);
+    }
+
+    private Specification<ApplicationUser> search(String kw) {
+        return (Root<ApplicationUser> n, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+            query.distinct(true);
+
+            if (kw == null || kw.trim().isEmpty()) {
+                return cb.conjunction();
+            }
+
+            return cb.or(
+                    cb.like(n.get("username"), "%" + kw + "%"),
+                    cb.like(n.get("phone"), "%" + kw + "%")
+            );
+        };
+    }
+
+    public Page<ApplicationUser> getSearchResult(String kw, Pageable pageable) {
+        Specification<ApplicationUser> spec = search(kw);
+        return userRepository.findAll(spec, pageable);
     }
 
 }

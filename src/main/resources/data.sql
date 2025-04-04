@@ -11,5 +11,9 @@ DROP TABLE IF EXISTS comment;
 SET FOREIGN_KEY_CHECKS = 1;
 
 update animalskin.ct_users
+set username = 'admin'
+where role = 'ADMIN';
+
+update animalskin.ct_users
 set role = 'ADMIN'
-where username = '김혜원'
+where username = '김채현'

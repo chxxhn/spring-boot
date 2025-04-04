@@ -12,10 +12,24 @@
       <label>제목:</label>
       <input type="text" th:field="*{title}" required />
     </div>
+
     <div>
       <label>내용:</label>
       <textarea th:field="*{content}" required></textarea>
     </div>
+
+    <div>
+      <label>
+        <input type="checkbox" th:field="*{important}" />
+        중요 공지로 설정
+      </label>
+    </div>
+
+    <div th:if="*{important}">
+      <label>중요도 (숫자가 작을수록 상단):</label>
+      <input type="number" th:field="*{priority}" min="0" />
+    </div>
+
     <div>
       <button type="submit">등록</button>
     </div>

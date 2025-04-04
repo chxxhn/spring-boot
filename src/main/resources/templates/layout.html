@@ -18,7 +18,11 @@
             <ul>
                 <li class="nav-item">
                     <a th:href="@{/login}" class="btn" sec:authorize="isAnonymous()">로그인</a>
-                    <a th:href="@{/logout}" class="btn" sec:authorize="isAuthenticated()">로그아웃</a>
+
+                    <span sec:authorize="isAuthenticated()">
+                        <a th:href="@{/logout}" class="btn">로그아웃</a>
+                        <a th:href="@{/profile}" class="btn">내 프로필</a>
+                    </span>
                 </li>
             </ul>
         </div>

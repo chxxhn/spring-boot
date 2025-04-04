@@ -3,59 +3,109 @@
       layout:decorate="~{layout}">
 <head>
     <title>회원 목록</title>
+    <style>
+        .admin-row {
+            background-color: #e6f7ff;
+        }
+    </style>
+
 </head>
 <body>
-<h2>회원 목록</h2>
 <div th:fragment="content">
-    <table border="1">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>이름</th>
-            <th>이메일</th>
-            <th>전화번호</th>
-            <th>성별</th>
-            <th>생일</th>
-            <th>로그인 방법</th>
-            <th>권한</th>
-            <th>회원가입 시간</th>
-            <th>마지막 로그인</th>
-            <th>활성화</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="user : ${users}">
-            <td th:text="${user.id}"></td>
-            <td th:text="${user.username}"></td>
-            <td th:text="${user.email}"></td>
-            <td th:text="${user.phone}"></td>
-            <td th:text="${user.gender}"></td>
-            <td th:text="${user.birthYear + '-' + user.birthday}"></td>
-            <td th:text="${user.oauthProvider}"></td>
-            <td th:text="${user.role}"></td>
-            <td th:text="${#temporals.format(user.createdAt, 'yyyy/MM/dd HH:mm:ss')}"></td>
-            <td th:text="${user.lastLoginAt != null ? #temporals.format(user.lastLoginAt, 'yyyy/MM/dd HH:mm:ss') : '미접속'}"></td>
-            <td th:text="${user.enabled}"></td>
-            <td>
+    <h2>회원 목록</h2>
+
+    <div th:if="${!userPage.content.isEmpty() or kw != ''}">
+        <form th:action="@{/admin}" method="get" style="text-align: left; margin-bottom: 10px;">
+            <input type="text" name="kw" th:value="${kw}" placeholder="이름, 전화번호 검색" />
+            <button type="submit">검색</button>
+        </form>
+    </div>
+
+    <div th:if="${!userPage.content.isEmpty()}">
+        <table border="1">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>이름</th>
+                <th>전화번호</th>
+                <th>성별</th>
+                <th>생일</th>
+                <th>이메일</th>
+                <th>권한</th>
+                <th>로그인 방법</th>
+                <th>회원가입 시간</th>
+                <th>마지막 로그인</th>
+                <th>계정 활성 상태</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user, stat : ${userPage.content}"
+                th:class="${user.role.name() == 'ADMIN'} ? 'admin-row' : ''">
+                <td th:text="${user.role.name() != 'ADMIN'} ? ${userIdToRowNumber[user.id]} : ''"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.phone}"></td>
+                <td th:text="${user.gender}"></td>
+                <td th:text="${user.birthYear + '-' + user.birthday}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.role}"></td>
+                <td th:text="${user.oauthProvider}"></td>
+                <td th:text="${#temporals.format(user.createdAt, 'yyyy/MM/dd HH:mm:ss')}"></td>
+                <td th:text="${user.lastLoginAt != null ? #temporals.format(user.lastLoginAt, 'yyyy/MM/dd HH:mm:ss') : '미접속'}"></td>
+                <td th:text="${user.enabled}"></td>
+                <td>
                 <span th:if="${user.role.name() != 'ADMIN'}">
                     <a th:href="@{'/admin/delete/' + ${user.id}}"
-                        onclick="return confirm('정말 삭제하시겠습니까?');">삭제
+                       onclick="return confirm('정말 삭제하시겠습니까?');">삭제
                     </a>
                 </span>
-                <span th:if="${user.role.name() == 'ADMIN'}">관리자 보호</span>
-            </td>
-            <td>
+                    <span th:if="${user.role.name() == 'ADMIN'}">관리자 보호</span>
+                </td>
+                <td>
             <span th:if="${user.role.name() != 'ADMIN'}">
                 <a th:if="${user.enabled}" th:href="@{'/admin/deactivate/' + ${user.id}}" onclick="return confirm('정말 비활성화하시겠습니까?');">비활성화</a>
                 <a th:if="${!user.enabled}" th:href="@{'/admin/activate/' + ${user.id}}" onclick="return confirm('정말 활성화하시겠습니까?');">활성화</a>
             </span>
-                <span th:if="${user.role.name() == 'ADMIN'}">관리자 보호</span>
-            </td>
+                    <span th:if="${user.role.name() == 'ADMIN'}">관리자 보호</span>
+                </td>
 
-        </tr>
-        </tbody>
-    </table>
+            </tr>
+            </tbody>
+        </table>
+    </div>
     <a href="/">홈으로</a>
+
+    <form id="pageForm" th:action="@{/admin}" method="get">
+        <input type="hidden" name="page" value="0" />
+        <input type="hidden" name="kw" th:value="${kw}" />
+    </form>
+
+    <div style="margin-top: 20px; text-align: center;" th:if="${userPage.totalPages > 0}">
+        <a href="#" th:onclick="'submitPage(' + (${userPage.number > 0 ? userPage.number - 1 : 0}) + ')'"
+           th:classappend="${userPage.first} ? ' disabled' : ''">이전</a>
+
+        <span th:each="i : ${#numbers.sequence(0, userPage.totalPages - 1)}">
+        <a href="#"
+           th:text="${i + 1}"
+           th:onclick="'submitPage(' + ${i} + ')'"
+           th:classappend="${i == userPage.number} ? ' active' : ''"
+           style="margin: 0 5px;"></a>
+    </span>
+
+        <a href="#" th:onclick="'submitPage(' + (${userPage.number < userPage.totalPages - 1 ? userPage.number + 1 : userPage.totalPages - 1}) + ')'"
+           th:classappend="${userPage.last} ? ' disabled' : ''">다음</a>
+    </div>
+
+    <div th:if="${userPage.content.isEmpty() and kw != ''}" style="margin-top: 20px;">
+        <p>검색 결과가 없습니다.</p>
+    </div>
+
+    <script>
+        function submitPage(pageNum) {
+            const form = document.getElementById('pageForm');
+            form.page.value = pageNum;
+            form.submit();
+        }
+    </script>
 </div>
 </body>
 </html>

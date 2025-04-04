@@ -48,6 +48,7 @@ public class QuestionService {
         q.setSecret(dto.isSecret());
     }
 
+
     @Transactional
     public void delete(Long id) {
         questionRepository.deleteById(id);
@@ -62,12 +63,9 @@ public class QuestionService {
                 return cb.conjunction();
             }
 
-            Join<Question, Comment> comment = q.join("comments", JoinType.LEFT);
-
             return cb.or(
                     cb.like(q.get("title"), "%" + kw + "%"),
-                    cb.like(q.get("content"), "%" + kw + "%"),
-                    cb.like(comment.get("content"), "%" + kw + "%")
+                    cb.like(q.get("content"), "%" + kw + "%")
             );
         };
     }

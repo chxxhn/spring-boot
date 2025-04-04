@@ -9,62 +9,72 @@
 <div th:fragment="content">
   <h2>질문게시판</h2>
 
-  <form th:action="@{/question}" method="get" style="text-align: left; margin-bottom: 10px;">
-    <input type="text" name="kw" th:value="${kw}" placeholder="검색어 입력" />
-    <button type="submit">검색</button>
-  </form>
+  <div style="margin-bottom: 10px;">
+    <a th:href="@{/question/add}">
+      <button type="button">질문 추가</button>
+    </a>
+    <a th:href="@{/}">
+      <button type="button">홈으로 돌아가기</button>
+    </a>
+  </div>
 
-  <a th:href="@{/question/add}">
-    <button type="button">질문 추가</button>
-  </a>
+  <div th:if="${!questionPage.content.isEmpty() or kw != ''}">
+    <form th:action="@{/question}" method="get" style="text-align: left; margin-bottom: 10px;">
+      <input type="text" name="kw" th:value="${kw}" placeholder="검색어 입력" />
+      <button type="submit">검색</button>
+    </form>
+  </div>
 
-  <a th:href="@{/}">
-    <button type="button">홈으로 돌아가기</button>
-  </a>
-
-  <table border="1">
-    <thead>
-    <tr>
-      <th>ID</th>
-      <th>제목[댓글수]</th>
-      <th>작성자</th>
-      <th>작성일</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="question, stat : ${questionPage.content}"
-        th:onclick="|window.location.href='/question/${question.id}'|"
-        style="cursor: pointer;">
-      <td th:text="${stat.index + 1 + questionPage.number * questionPage.size}"></td>
-      <td th:text="${question.secret ? '비밀글' : question.title + (commentCounts[question.id] > 0 ? ' [' + commentCounts[question.id] + ']' : '')}"></td>
-      <td th:text="${question.secret ? '비밀글' : @maskingUtil.maskName(question.user.username)}"></td>
-      <td th:text="${question.secret ? '비밀글' :
+  <div th:if="${!questionPage.content.isEmpty()}">
+    <table border="1">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>제목[댓글수]</th>
+        <th>작성자</th>
+        <th>작성일</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="question, stat : ${questionPage.content}"
+          th:onclick="|window.location.href='/question/${question.id}'|"
+          style="cursor: pointer;">
+        <td th:text="${stat.index + 1 + questionPage.number * questionPage.size}"></td>
+        <td th:text="${question.secret ? '비밀글' : question.title + (commentCounts[question.id] > 0 ? ' [' + commentCounts[question.id] + ']' : '')}"></td>
+        <td th:text="${question.secret ? '비밀글' : @maskingUtil.maskName(question.user.username)}"></td>
+        <td th:text="${question.secret ? '비밀글' :
                 (#temporals.format(question.updatedAt, 'yy/MM/dd HH:mm')) +
                 (question.createdAt != question.updatedAt ? ' (수정됨)' : '')}"></td>
-    </tr>
-    </tbody>
-  </table>
+      </tr>
+      </tbody>
+    </table>
 
-  <form id="pageForm" th:action="@{/question}" method="get">
-    <input type="hidden" name="page" value="0" />
-    <input type="hidden" name="kw" th:value="${kw}" />
-  </form>
+    <form id="pageForm" th:action="@{/question}" method="get">
+      <input type="hidden" name="page" value="0" />
+      <input type="hidden" name="kw" th:value="${kw}" />
+    </form>
 
-  <div style="margin-top: 20px; text-align: center;">
-    <a href="#" th:onclick="'submitPage(' + (${questionPage.number > 0 ? questionPage.number - 1 : 0}) + ')'"
-       th:class="${questionPage.first} ? 'disabled' : ''">이전</a>
+    <div th:if="${questionPage.totalPages > 0}" style="margin-top: 20px; text-align: center;">
+      <a href="#"
+         th:onclick="'submitPage(' + (${questionPage.number > 0 ? questionPage.number - 1 : 0}) + ')'"
+         th:classappend="${questionPage.first} ? ' disabled' : ''">이전</a>
 
-    <span th:each="i : ${#numbers.sequence(0, questionPage.totalPages - 1)}">
+      <span th:each="i : ${#numbers.sequence(0, questionPage.totalPages - 1)}">
         <a href="#"
            th:text="${i + 1}"
            th:onclick="'submitPage(' + ${i} + ')'"
-           th:class="${i == questionPage.number} ? 'active' : ''"
+           th:classappend="${i == questionPage.number} ? ' active' : ''"
            style="margin: 0 5px;"></a>
-    </span>
+      </span>
 
-    <a href="#"
-       th:onclick="'submitPage(' + (${questionPage.number < questionPage.totalPages - 1 ? questionPage.number + 1 : questionPage.totalPages - 1}) + ')'"
-       th:class="${questionPage.last} ? 'disabled' : ''">다음</a>
+      <a href="#"
+         th:onclick="'submitPage(' + (${questionPage.number < questionPage.totalPages - 1 ? questionPage.number + 1 : questionPage.totalPages - 1}) + ')'"
+         th:classappend="${questionPage.last} ? ' disabled' : ''">다음</a>
+    </div>
+  </div>
+
+  <div th:if="${questionPage.content.isEmpty() and kw != ''}" style="margin-top: 20px;">
+    <p>검색 결과가 없습니다.</p>
   </div>
 
   <script>

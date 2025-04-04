@@ -36,10 +36,6 @@ public class NoticeService {
         noticeRepository.save(notice);
     }
 
-    public List<Notice> getAllNotices() {
-        return noticeRepository.findAll();
-    }
-
 
     @Transactional
     public void update(Long noticeId, NoticeDTO noticeDTO) {
@@ -47,6 +43,12 @@ public class NoticeService {
                 .orElseThrow(() -> new RuntimeException("공지가 없습니다."));
         notice.setTitle(noticeDTO.getTitle());
         notice.setContent(noticeDTO.getContent());
+    }
+
+
+    @Transactional
+    public void delete(Long noticeId) {
+        noticeRepository.deleteById(noticeId);
     }
 
 
@@ -69,5 +71,16 @@ public class NoticeService {
     public Page<Notice> getSearchResult(String kw, Pageable pageable) {
         Specification<Notice> spec = search(kw);
         return noticeRepository.findAll(spec, pageable);
+    }
+
+
+    public Page<Notice> getNoticesWithSorting(int page, String kw) {
+        Sort sort = Sort.by(
+                Sort.Order.desc("isImportant"),
+                Sort.Order.desc("priority"),
+                Sort.Order.desc("createdAt")
+        );
+        Pageable pageable = PageRequest.of(page, 10, sort);
+        return getSearchResult(kw, pageable);
     }
 }

@@ -30,9 +30,8 @@ public class NoticeController {
     @GetMapping("")
     public String showNoticePage(@RequestParam(value = "page", defaultValue = "0") int page, Model model,
                                  @RequestParam(value = "kw", defaultValue = "") String kw) {
-        List<Notice> notices = noticeService.getAllNotices();
-        Page<Notice> noticePage = noticeService.getSearchResult(kw, PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt")));
-        model.addAttribute("notices", notices);
+        page = Math.max(page, 0);
+        Page<Notice> noticePage = noticeService.getNoticesWithSorting(page, kw);
         model.addAttribute("noticePage", noticePage);
         model.addAttribute("kw", kw);
         return "notice/list";
@@ -84,6 +83,15 @@ public class NoticeController {
         }
         noticeService.update(noticeId, noticeDTO);
         return "redirect:/notice/" + noticeId;
+    }
+
+    @PostMapping("/delete/{noticeId}")
+    public String deleteNotice(@PathVariable Long noticeId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (!userDetails.getUser().getRole().name().equals("ADMIN")) {
+            throw new AccessDeniedException("수정 권한이 없습니다.");
+        }
+        noticeService.delete(noticeId);
+        return "redirect:/notice";
     }
 
 }

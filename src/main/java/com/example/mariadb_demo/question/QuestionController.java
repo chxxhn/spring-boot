@@ -33,6 +33,7 @@ public class QuestionController {
     @GetMapping("")
     public String showQuestionPage(@RequestParam(value = "page", defaultValue = "0") int page, Model model,
                                    @RequestParam(value = "kw", defaultValue = "") String kw) {
+        page = Math.max(page, 0);
         List<Question> questions = questionService.getAllQuestions();
         Map<Long, Integer> commentCounts = new HashMap<>();
         Page<Question> questionPage = questionService.getSearchResult(kw, PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "createdAt")));
@@ -42,7 +43,6 @@ public class QuestionController {
             commentCounts.put(q.getId(), count);
         }
 
-        model.addAttribute("questions", questions);
         model.addAttribute("commentCounts", commentCounts);
         model.addAttribute("questionPage", questionPage);
         model.addAttribute("kw", kw);

@@ -1,4 +1,5 @@
-package com.example.mariadb_demo.notice;
+package com.example.mariadb_demo.FAQ;
+
 
 import com.example.mariadb_demo.user.ApplicationUser;
 import com.example.mariadb_demo.user.BaseEntity;
@@ -8,11 +9,11 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-public class Notice extends BaseEntity {
+public class FAQ extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "notice_id")
+    @Column(name = "FAQ_id")
     private Long id;
 
     @Column(nullable = false)
@@ -25,17 +26,13 @@ public class Notice extends BaseEntity {
     @JoinColumn(name = "user_id")
     private ApplicationUser user;
 
-    private boolean isImportant = false;
-
-    private int priority = 0;
-
-    public Notice(String title, String content, ApplicationUser user) {
+    public FAQ(String title, String content, ApplicationUser user) {
         this.title = title;
         this.content = content;
         this.user = user;
     }
 
-    protected Notice() {
-    }
+    public FAQ() {
 
+    }
 }
